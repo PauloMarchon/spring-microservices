@@ -1,12 +1,17 @@
 package com.paulomarchon.authserver.keys;
 
+import org.springframework.data.annotation.Id;
+import org.springframework.data.redis.core.RedisHash;
+
 import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
 import java.time.Instant;
 import java.util.UUID;
 
 
+@RedisHash
 public class RsaKeyPair {
+    @Id
     private final String id;
     private final Instant created;
     private final RSAPublicKey publicKey;

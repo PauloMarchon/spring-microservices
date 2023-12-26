@@ -7,14 +7,13 @@ import reactor.core.publisher.Mono;
 import java.util.List;
 
 @Repository
-public class RedisRsaKeyPairReactiveRepository implements RsaKeyPairReactiveRepository {
+public class RedisRsaKeyPairReactiveRepository {
 
     private final ReactiveRedisTemplate<String, RsaKeyPair> redisTemplate;
 
     public RedisRsaKeyPairReactiveRepository(ReactiveRedisTemplate<String, RsaKeyPair> redisTemplate) {
         this.redisTemplate = redisTemplate;
     }
-
 
     @Override
     public List<RsaKeyPair> findKeyPairs() {
