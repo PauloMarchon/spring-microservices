@@ -13,15 +13,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class RsaKeyPairRepositoryJWKSource implements JWKSource<SecurityContext>, OAuth2TokenCustomizer<JwtEncodingContext> {
-    private final RsaKeyPairReactiveRepository keyPairRepository;
+  private final RsaKeyPairRedisRepository keyPairRepository;
 
-    public RsaKeyPairRepositoryJWKSource(RsaKeyPairReactiveRepository keyPairRepository) {
+    public RsaKeyPairRepositoryJWKSource(RsaKeyPairRedisRepository keyPairRepository) {
         this.keyPairRepository = keyPairRepository;
     }
 
     @Override
     public List<JWK> get(JWKSelector jwkSelector, SecurityContext context) throws KeySourceException {
-        List<RsaKeyPair> keyPairs = this.keyPairRepository.findKeyPairs();
+        List<RsaKeyPair> keyPairs = (List<RsaKeyPair>) this.keyPairRepository.findKeyPairs();
         List<JWK> result = new ArrayList<>(keyPairs.size());
 
         for (RsaKeyPair keyPair : keyPairs) {

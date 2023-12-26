@@ -9,7 +9,7 @@ import java.time.Instant;
 import java.util.UUID;
 
 
-@RedisHash
+@RedisHash("RsaKeyPair")
 public class RsaKeyPair {
     @Id
     private final String id;

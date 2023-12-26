@@ -4,9 +4,10 @@ import com.paulomarchon.authserver.keys.RsaKeyPair;
 import com.paulomarchon.authserver.keys.RsaKeyPairRedisSerializer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.data.redis.connection.ReactiveRedisConnectionFactory;
+import org.springframework.data.redis.cache.RedisCacheManager;
+import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
-import org.springframework.data.redis.core.ReactiveRedisTemplate;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.RedisSerializationContext;
 
@@ -20,17 +21,25 @@ class RedisConfig {
     @Bean
     LettuceConnectionFactory connectionFactory() {
         return new LettuceConnectionFactory();
+        //return new LettuceConnectionFactory("localhost", 6379);
     }
 
     @Bean
-    ReactiveRedisTemplate<String, RsaKeyPair> ReactiveRedisTemplate(ReactiveRedisConnectionFactory connectionFactory) {
+    RedisTemplate<String, RsaKeyPair> redisTemplate(RedisConnectionFactory connectionFactory) {
         Jackson2JsonRedisSerializer<RsaKeyPair> serializer = new Jackson2JsonRedisSerializer<>(RsaKeyPair.class);
 
         RedisSerializationContext.RedisSerializationContextBuilder<String, RsaKeyPair> builder =
                 RedisSerializationContext.newSerializationContext(rsaKeyPairRedisSerializer);
-
         RedisSerializationContext<String, RsaKeyPair> context = builder.value(serializer).build();
-        return new ReactiveRedisTemplate<>(connectionFactory, context);
+
+        RedisTemplate<String, RsaKeyPair> redisTemplate = new RedisTemplate<>();
+        redisTemplate.setConnectionFactory(connectionFactory);
+        return redisTemplate;
+    }
+
+    @Bean
+    public RedisCacheManager cacheManager(RedisConnectionFactory connectionFactory) {
+        return RedisCacheManager.create(connectionFactory);
     }
 /*
     @Bean

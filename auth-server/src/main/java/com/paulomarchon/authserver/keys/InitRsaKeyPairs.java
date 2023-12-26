@@ -11,12 +11,12 @@ import java.time.Instant;
 
 @Component
 public class InitRsaKeyPairs implements ApplicationRunner {
-    private final RsaKeyPairReactiveRepository keyPairRepository;
+    private final RsaKeyPairRedisRepository keyPairRepository;
     private final String kid;
     private final RSAPublicKey publicKey;
     private final RSAPrivateKey privateKey;
 
-    public InitRsaKeyPairs(RsaKeyPairReactiveRepository keyPairRepository,
+    public InitRsaKeyPairs(RsaKeyPairRedisRepository keyPairRepository,
                            @Value("${jwt.key.id}") String kid,
                            @Value("${jwt.key.public}")RSAPublicKey publicKey,
                            @Value("${jwt.key.private}")RSAPrivateKey privateKey) {
@@ -28,7 +28,7 @@ public class InitRsaKeyPairs implements ApplicationRunner {
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
-        this.keyPairRepository.saveKeyPair(
+        this.keyPairRepository.save(
                 new RsaKeyPair(this.kid, Instant.now(), publicKey, privateKey)
         );
     }
