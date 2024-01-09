@@ -1,1 +1,5 @@
-
+spring:
+  application:
+    name: resource-server
+  config:
+    import: optional:configserver:http://127.0.0.1:8888

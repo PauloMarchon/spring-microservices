@@ -1,24 +1,37 @@
 server:
-  port: 9090
+  port: 9000
 spring:
   application:
     name: auth-server
-  redis:
-    host: localhost
-    port: 6379
+  security:
+    oauth2:
+      clients:
+        login-client:
+          client-id: login-client
+          client-secret: password
+          authorized-grant-types: authorization_code
+          redirect-uri: http://127.0.0.1:8080/login/oauth2/code/login-client
+          scope: openid,profile
+  datasource:
+    url: jdbc:postgresql://localhost:5434/authserver
+    username: postgres
+    password: postgres
+    driver-class-name: org.postgresql.Driver
+#  redis:
+#    host: localhost
+#    port: 6379
+
 
 jwt:
   encryptor:
-    password: test
-    salt: 626F6F746966756C
+    password: password
   key:
-    id: 'configured-f57f-46a2-b502-8a24c308be7f'
-    public: classpath:private-key.pem
-    private: classpath:public-key.pem
+    public: classpath:app.pub
+    private: classpath:app.key
 
 eureka:
   instance:
     hostname: localhost
   client:
     service-url:
-      defaultZone: http://localhost:8761/eureka
+      defaultZone: http://127.0.0.1:8761/eureka
